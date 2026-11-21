@@ -700,6 +700,8 @@ def main():
     rows, md, skipped, n = [], [f"# {brand} review posts, {dt.date.today():%d %b %Y}\n"], [], 0
 
     for raw in json.loads(Path(a.reviews).read_text()):
+        if only and locs.get(str(raw.get("location", "")).lower()) is not only:
+            continue  # another office's review: not part of this run
         key = review_key(raw)
         if key in seen and not a.include_seen:
             skipped.append(raw.get("name") or "a review")
