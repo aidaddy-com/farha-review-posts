@@ -1,0 +1,223 @@
+{
+  "business_name": "Farha Roofing",
+  "website": "https://farharoofing.com/",
+  "instagram": "https://www.instagram.com/farharoofing/",
+  "locations": [
+    {
+      "slug": "wichita",
+      "name": "Wichita, KS",
+      "tag": "From Our Wichita Market:",
+      "phone": "316-831-7510",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0x87bae3e9cec1acef:0xfea23fb69eec1970!8m2!3d37.6952214!4d-97.2709336!16s%2Fg%2F1v5fsf2q!19sChIJ76zBzunjuocRcBnsnrY_ov4?hl=en"
+        },
+        {
+          "name": "BBB",
+          "url": "https://www.bbb.org/us/ks/wichita/profile/roofing-contractors/farha-roofing-0714-40134/customer-reviews"
+        },
+        {
+          "name": "Yelp",
+          "url": "https://www.yelp.com/biz/farha-roofing-wichita-4"
+        }
+      ],
+      "hashtags": [
+        "#WichitaRoofing",
+        "#WichitaKS",
+        "#KansasRoofing"
+      ]
+    },
+    {
+      "slug": "kansas-city",
+      "name": "Kansas City, MO",
+      "tag": "From Our Kansas City Market:",
+      "phone": "(816) 244-3231",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0x87c0f12b6795d5ff:0x33e3c5e891a312b9!8m2!3d39.1047548!4d-94.5840061!16s%2Fg%2F11h4s26ncm!19sChIJ_9WVZyvxwIcRuRKjkejF4zM?hl=en"
+        }
+      ],
+      "hashtags": [
+        "#KansasCityRoofing",
+        "#KCMO",
+        "#KansasCity"
+      ]
+    },
+    {
+      "slug": "st-louis",
+      "name": "St. Louis, MO",
+      "tag": "From Our St. Louis Market:",
+      "phone": "314-207-5471",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0x87df2d882b90dce1:0x2d9d537323408473!8m2!3d38.6127465!4d-90.3185077!16s%2Fg%2F11w2bp_wrm!19sChIJ4dyQK4gt34cRc4RAI3NTnS0?hl=en"
+        }
+      ],
+      "hashtags": [
+        "#StLouisRoofing",
+        "#STL",
+        "#StLouis"
+      ]
+    },
+    {
+      "slug": "denver",
+      "name": "Denver, CO",
+      "tag": "From Our Denver Market:",
+      "phone": "(720) 706-2969",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0x876c7f1ede6082c1:0xc868fe4ecbb4b192!8m2!3d39.7436369!4d-104.9854435!16s%2Fg%2F11f5jpnw64!19sChIJwYJg3h5_bIcRkrG0y07-aMg?hl=en"
+        },
+        {
+          "name": "BBB",
+          "url": "https://www.bbb.org/us/co/denver/profile/roofing-contractors/farha-roofing-denver-1296-90257293/customer-reviews"
+        }
+      ],
+      "hashtags": [
+        "#DenverRoofing",
+        "#DenverCO",
+        "#ColoradoRoofing"
+      ]
+    },
+    {
+      "slug": "durango",
+      "name": "Durango, CO",
+      "tag": "From Our Durango Market:",
+      "phone": "(970) 709-7422",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0xaa4c66868a7dbb39:0x12eb0f31275e08e2!8m2!3d37.2248626!4d-107.8188325!16s%2Fg%2F11pvblxk7b!19sChIJObt9ioZmTKoR4gheJzEP6xI?hl=en"
+        }
+      ],
+      "hashtags": [
+        "#DurangoCO",
+        "#DurangoRoofing",
+        "#SouthwestColorado"
+      ]
+    },
+    {
+      "slug": "canon-city",
+      "name": "Cañon City, CO",
+      "tag": "From Our Cañon City Market:",
+      "phone": "(719) 204-4726",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0x87148f5e65b02a69:0x7b4563de95e5bb3f!8m2!3d38.4142018!4d-105.2589742!16s%2Fg%2F11v_8bvhp_!19sChIJaSqwZV6PFIcRP7vlld5jRXs?hl=en"
+        }
+      ],
+      "hashtags": [
+        "#CanonCity",
+        "#ColoradoRoofing",
+        "#FremontCounty"
+      ]
+    },
+    {
+      "slug": "eads",
+      "name": "Eads, CO",
+      "tag": "From Our Eastern Colorado Market:",
+      "phone": "(719) 409-7504",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0x469ef5a5cf04e741:0xac34532900621978!8m2!3d38.657203!4d-103.0083615!16s%2Fg%2F11pcmtms64!19sChIJQecEz6X1nkYReBliAClTNKw?hl=en"
+        }
+      ],
+      "hashtags": [
+        "#EasternColorado",
+        "#ColoradoRoofing",
+        "#RuralRoofing"
+      ]
+    },
+    {
+      "slug": "phoenix",
+      "name": "Phoenix, AZ",
+      "tag": "From Our Phoenix Market:",
+      "phone": "(602) 833-5105",
+      "review_links": [
+        {
+          "name": "Google",
+          "url": "https://www.google.com/maps/place/Farha+Roofing/data=!4m7!3m6!1s0x872b0dfcf4b76687:0xed87d1ef6bab55e7!8m2!3d33.3820028!4d-111.9399994!16s%2Fg%2F11vq2k2d4t!19sChIJh2a39PwNK4cR51Wra-_Rh-0?hl=en"
+        }
+      ],
+      "hashtags": [
+        "#PhoenixRoofing",
+        "#TempeAZ",
+        "#ArizonaRoofing"
+      ]
+    }
+  ],
+  "only_stars": 5,
+  "template": "auto",
+  "auto": {
+    "short": "split",
+    "long": "market"
+  },
+  "carousel": "long-only",
+  "carousel_slides": [
+    "split",
+    "market"
+  ],
+  "short_quote_words": 32,
+  "carousel_min_words": 60,
+  "colors": {
+    "dark": "#032570",
+    "darker": "#021a4f",
+    "accent": "#e8833d",
+    "accent_light": "#f2a541"
+  },
+  "fonts": {
+    "head": "Montserrat[wght].ttf",
+    "head_italic": "Montserrat-Italic[wght].ttf",
+    "body": "Montserrat[wght].ttf",
+    "label": "Montserrat[wght].ttf"
+  },
+  "head_weight": 700,
+  "logo": "logo-white.png",
+  "logo_color": "logo-color.png",
+  "photos_folder": "photos",
+  "photo_focus": {},
+  "bubble_title": "Client Testimonial",
+  "subtag": "Here's how we helped.",
+  "caption": {
+    "extras": "Free roof inspection: call our {office} office at {phone}",
+    "hashtags": [
+      "#FarhaRoofing"
+    ]
+  },
+  "job_types": {
+    "commercial": {
+      "label": "Commercial Project",
+      "hashtags": [
+        "#CommercialRoofing",
+        "#FlatRoof",
+        "#TPO"
+      ]
+    },
+    "residential": {
+      "label": "Residential Project",
+      "hashtags": [
+        "#RoofReplacement",
+        "#NewRoof",
+        "#HomeImprovement"
+      ]
+    },
+    "multifamily": {
+      "label": "Multifamily Project",
+      "fallback": [
+        "commercial"
+      ],
+      "hashtags": [
+        "#MultifamilyRoofing",
+        "#HOA",
+        "#PropertyManagement"
+      ]
+    }
+  },
+  "hook_max_words": 12
+}

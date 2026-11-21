@@ -1,0 +1,124 @@
+---
+name: farha-review-posts
+description: Turns Farha Roofing's newest 5-star reviews (Google for each office, plus BBB and Yelp where Farha has them) into ready-to-post Instagram images (1080x1350) in Farha's own "Client Testimonial" brand look, with captions and an approval sheet. Covers all 8 Farha offices (Wichita, Kansas City, St. Louis, Denver, Durango, Cañon City, Eads, Phoenix), asks which office to do, tags each post Commercial, Residential or Multifamily (detected from the review, changeable per post), and uses Farha's own job photos to match. Already set up with Farha's logo, colors, fonts, photos and review links, so there are no setup questions. Use when someone says "make review posts", "new review posts for Denver", "turn our reviews into Instagram posts", "post our 5-star reviews", "make post 3 commercial", or pastes a review and wants a post. It never posts anything itself.
+---
+
+# Farha review posts
+
+You're helping someone on the Farha Roofing team, most likely marketing, who is probably **not technical**. Keep messages short and friendly. Never show code, JSON or file paths unless they ask, and do the technical work quietly.
+
+This skill **never posts, publishes or replies** to anything online. The person approves the images and posts them themselves.
+
+Everything is already set up for Farha: logo, brand colors (navy and orange), Montserrat, background photos from Farha's own jobs, and review links for every office. **Don't ask setup questions.**
+
+## 0. Get the Farha folder ready (first time only)
+
+- The tools sit next to this file: `scripts/make_posts.py` and `scripts/fonts/`.
+- The ready-made business folder is `business/`. It holds `settings.json`, the logos, `fonts/`, `photos/`, and `seen.json` (the reviews already turned into posts, so they aren't repeated).
+- If there's no `Farha Review Posts/` folder in the working folder yet, **copy `business/` there under that name** and use the copy from now on. In Cowork that's the folder the person picked; it's kept for next time.
+- If the person attaches a `seen.json` or `settings.json` from a previous run, put it in that folder first.
+
+Tell the person once, in one line: **"You can change the background photos any time. Just send me job photos and say whether they're commercial, residential or multifamily."**
+
+## 1. Ask which office
+
+Farha has 8 offices, listed in `settings.json` under `locations`:
+
+| Office | Review links |
+|---|---|
+| Wichita, KS | Google, BBB, Yelp |
+| Kansas City, MO | Google |
+| St. Louis, MO | Google |
+| Denver, CO | Google, BBB |
+| Durango, CO | Google |
+| Cañon City, CO | Google |
+| Eads, CO (Eastern Colorado) | Google |
+| Phoenix, AZ | Google |
+
+Ask one question: **"Which office should I do: one of them, a few, or all 8?"** If they already named one ("new posts for Denver"), skip the question.
+
+## 2. Get the newest 5-star reviews
+
+For each chosen office, use its `review_links` in `settings.json`.
+
+**If you have a browser** (Claude in Chrome, or Cowork's browser), open each link and follow `reference/find-reviews.md`. Read only: never click Reply, Like, Report or Write a review. Take about the 10 to 20 newest reviews per office.
+
+**If you can't browse, or a page is blocked:** ask the person to paste the reviews. Say: "Open Farha Roofing <office> on Google Maps, click Reviews, sort by Newest, and paste the last few 5-star reviews here."
+
+Rules:
+- **5-star only.** Skip 4-star and lower.
+- **Skip reviews with no text,** and never use the owner's reply as the review.
+- **Skip reviews that name another company** as the roofer (it happens: "I highly recommend Century Roofing").
+- **Same review in two places** (Google and BBB): make **one** post from the Google copy, because BBB hides staff names.
+- **Photos with reviews:** if the reviewer attached photos, download the largest version into `photos/from-reviews/` and set `"photo"` on that review. It becomes that post's background. Mention it in the hand-over.
+- Reviews already in `seen.json` are skipped automatically. Say how many were new per office.
+
+## 3. Write `reviews.json` (you do this; the person never sees it)
+
+The format is at the top of `scripts/make_posts.py`. For each review:
+
+- **`location`**: the office slug from `settings.json` (`wichita`, `kansas-city`, `st-louis`, `denver`, `durango`, `canon-city`, `eads`, `phoenix`). It sets the "From Our ___ Market:" tag and the source line.
+- **`quote`**: the full review, word for word. Never fix spelling or grammar.
+- **`hook`**: **the most important field.** It's the one big quote on the image. Rules:
+  - 12 words or fewer, copied word for word from the review. You may start partway into a sentence and capitalize its first letter, nothing else.
+  - Make it grab attention: specifics beat praise. Look for numbers, names, results, a surprising detail or a strong phrase. Good: "10 guys up and down ladders like a Vegas cirque show", "Turns out I still have some life left in my roof", "We will be using them on our other buildings in the future." Weak: "Great experience from start to finish."
+  - Use a different kind of hook from post to post in the same batch so the feed doesn't sound repetitive. Never repeat the same phrase ("in one day") twice in a batch if another strong line exists.
+  - If the whole review is 12 words or fewer, the hook can be the whole review.
+- **`hl`**: a short phrase **inside the hook**, shown in orange. Word for word.
+- **`name`**: first name plus last initial ("Sarah M."). A business reviewer keeps its business name ("Lionsgate Management").
+- **`date`**: "Mon YYYY", worked out from "3 weeks ago" using today's date. It goes in the approval sheet only, not on the image.
+- **`job`**: leave it out, and the script detects it (see step 4). Set it only when the person tells you, or when the review clearly says what it was and the detector would miss it.
+- **Blurred names (BBB only):** BBB shows staff names as "REMOVED". Don't leave "REMOVED" in, and don't guess the name. Prefer a hook that avoids it; otherwise swap in the plainest role word that reads naturally, with no brackets ("REMOVED and REMOVED with Farha" becomes "Two reps with Farha"). Write it as `"edits": [{"from": "...", "to": "..."}]`. It's listed in the approval sheet.
+- **`caption`**: under 80 words, warm, professional and plain.
+  - Thank the reviewer by first name (or business name).
+  - Mention one specific thing from the review. Never invent details (job type, city, names, roof system) that aren't in the review.
+  - End with `Free roof inspection: call our <office> office at <phone>` using that office's `phone` from `settings.json`.
+  - Then 3 to 5 hashtags: `#FarhaRoofing`, one of the office's `hashtags`, and one or two from the post's job type (`job_types.<type>.hashtags`). Don't use `#CommercialRoofing` on a home job.
+
+## 4. Job type: commercial, residential or multifamily
+
+Every post gets a navy tag ("Commercial Project", "Residential Project" or "Multifamily Project"), and the background photo comes from that type's photo folder.
+
+**How it's detected** (from the review's own words, when `job` isn't set):
+- **Multifamily:** HOA, homeowners association, condo, apartment, townhome. These win even if the review also says "building".
+  - Exception: a single house inside an HOA ("came to our house… what our HOA required") is residential.
+- **Commercial:** building, office, warehouse, church, school, store, medical, facility, tenants, vendor, TPO, EPDM, membrane, flat roof, and similar.
+- **Residential:** everything else. Most reviews are homes.
+
+The approval sheet shows the job type, the words that decided it ("auto: condominium") and the background photo used, so the approver can catch a wrong guess.
+
+**The person can change it any time.** Map what they say to the fix and run again:
+- "Make post 3 commercial" → set `"job": "commercial"` on that review.
+- "Make this whole batch commercial" → add `--job commercial`.
+- "That one is an apartment complex" → `"job": "multifamily"`.
+
+Tell them about the job type in one line during the hand-over, and flag any review where you're unsure (for example "a handful of jobs we've worked with them on" reads like a business client, but doesn't say so).
+
+## 5. Make the images
+
+```bash
+pip install pillow   # only if "Pillow is missing" appears
+python3 scripts/make_posts.py --folder "Farha Review Posts" reviews.json
+```
+
+Add `--location <slug>` to make one office only from a mixed file.
+
+Layout is automatic:
+- **Reviews up to 32 words:** photo on top, the hook big underneath ("photo and quote").
+- **Longer reviews:** Farha's "Client Testimonial" card, with the hook in the navy box and the full review under "Here's how we helped."
+- **Reviews of 60+ words:** a 2-slide carousel. Slide 1 is the photo with the hook; slide 2 is the testimonial card with the full review (it doesn't repeat the hook).
+
+If they ask for a different look, add `--template split|market|auto` or `--carousel off|long-only|always`.
+
+**Look at every image before showing it.** Check for cut-off text, an awkward photo crop, a photo that shows another company's sign, or stray "REMOVED". To fix a crop, set `photo_focus` for that photo in `settings.json`, then run again.
+
+## 6. Hand over
+
+1. Show the images grouped per post, with each caption underneath.
+2. Give them the `posts/<date>` folder to download, zipped if possible. It includes `approval.csv` (opens in Excel or Google Sheets) and `captions.md`.
+3. Tell them in plain words, in 5 lines or fewer:
+   - How many posts per office, and how many are carousels
+   - The job type of each post, and any you're unsure about
+   - Anything skipped or edited
+   - That nothing was posted, so they review and post themselves
+   - The next step: "Next week just say 'make review posts for <office>' and I'll grab the new ones."
