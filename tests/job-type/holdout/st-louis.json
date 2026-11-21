@@ -1,15 +1,93 @@
 [
-["Andre Chambers",5,"","unclear","Shane and the team were very helpful in getting crucial repairs done at my property. Everything was on time and the process was great. Repeat customer for sure."],
-["Bob Osdieck",5,"","residential","Shane Cox of Farha Roofing is the best contractor I've ever worked with. He and his team resolved a nearly three- year-old roofing/siding claim with an insurance adjustor and managed additional contractors upgrading soffit, fascia, gutters and gutter guards. He was very responsive to all my calls and questions, kept the project moving to completion, and personally inspected all work. Prices were well explained and fair."],
-["Mary Wolff",5,"","unclear","We had a great experience with the team at Farha. Allegra, Shane and Nick were very communicative and transparent from day one. They worked very efficiently - they visited our site, did a thorough inspection and put together a detailed estimate. They gave us options and took the time to answer all of our questions. The day of the job, we received detailed photos of the progress and the team onsite was really professional. They are the rare type of company that has both really strong customer service and great product delivery, without compromise. We will use them for our roofing projects moving forward."],
-["Keith Schoeck",5,"","multifamily","They were very responsive, prompt, efficient, and polite to the residents in this multi family community. I have used them before and intend to utilize them more often in the future."],
-["R-D",5,"","residential","The company as a whole goes Above and beyond! Great service. Very detailed. Hardworking! I would have them work on my house in the future."],
-["Amanda Calvert",5,"","residential","I had extensive damage to the roof of my home after a tornado. I was recommended to Farha by the landlord of the company I work for, who also does business with them. Shane Cox installed a tarp within the next day of contacting Farha. Within a week I had a new roof. His crew installed in one day and clean up very well after. I have never had to make an insurance claim on my house, and Shane was very helpful in ushering me through the various steps and timelines. I would have no hesitations with recommending Farha roofing to others."],
-["G Lauterio",5,"","residential","Shane Cox did a great job managing the crews for my roof replacement, new gutters and flashing and screen repair. He kept me informed of when the trades were coming out and made sure everything was done professionally and the site was cleaned up afterwards."],
-["Blake Bennett",5,"","unclear","Farha Roofing is a great company to work with. Nick and his team are professional and knowledgeable when it comes any roofing needs you have on your home or business."],
-["John Winingar",5,"","residential","Nick Jennewein with Farha roofing provided awesome service after the recent storms. He was able to show up at my house first thing the following morning to do an inspection of my roof and siding. Other companies said it would be days before they could even come out. Even though he was just there for an inspection, he noticed a couple things he could repair on my siding while he was there. I have recommended Farha to all my friends and family. Thanks for the great service and fast response."],
-["John Carver",5,"","residential","After suffering significant storm damage to my home in Missouri I interviewed 3 contractors to provide repair and replacement estimates. As a result of those interviews I selected Farah Roofing. there was not a close second. Both Nick Jennewein the General Manager and Shane Cox the Project Manager came to my home, reviewed the needed work, and provided a well outlined proposal and a reasonable estimate. They worked closely with my insurance company and anytime the insurance representatives were on site Shane Cox was here. My background was spent as the Operations Chief for the St. Louis branch of a major organization with 2 large buildings. I have worked countless large projects and some not so large and I can say with complete confidence that Farah Roofing was in all ways superior. Supplies were delivered and staged according to my instructions."],
-["Teresa Newman",5,"","unclear","I have been in property management for MANY years. The level of professionalism that Farha Roofing exhibits is exceptional! They have completed many scopes of work at my property and from small repairs to full roof replacements they give the same level of attention. HIGHLY recommend this company for any of your roofing needs!!!!"],
-["Justin Elkins",5,"","residential","Farha repaired sections of my roof, and I couldn't be happier. The level of expertise, friendliness, and the product quality. An excellent local company!"],
-["Sam Ashlock",5,"","unclear","Nick at Farha roofing was incredible. We had everything going against us with insururance and deadlines and Nick pulled it all to the finish line. From Nick, the materials, the crew, and even Betty in the office, everyone I worked with was professional and excellent. I couldn’t recommend them more. Use Farha roofing, they will get it done right!"]
+ [
+  "A. C.",
+  5,
+  "",
+  "unclear",
+  "Shane and the team were very helpful in getting crucial repairs done at my property. Everything was on time and the process was great. Repeat customer for sure."
+ ],
+ [
+  "B. O.",
+  5,
+  "",
+  "residential",
+  "Shane Cox of Farha Roofing is the best contractor I've ever worked with. He and his team resolved a nearly three- year-old roofing/siding claim with an insurance adjustor and managed additional contractors upgrading soffit, fascia, gutters and gutter guards. He was very responsive to all my calls and questions, kept the project moving to completion, and personally inspected all work. Prices were well explained and fair."
+ ],
+ [
+  "M. W.",
+  5,
+  "",
+  "unclear",
+  "We had a great experience with the team at Farha. Allegra, Shane and Nick were very communicative and transparent from day one. They worked very efficiently - they visited our site, did a thorough inspection and put together a detailed estimate. They gave us options and took the time to answer all of our questions. The day of the job, we received detailed photos of the progress and the team onsite was really professional. They are the rare type of company that has both really strong customer service and great product delivery, without compromise. We will use them for our roofing projects moving forward."
+ ],
+ [
+  "K. S.",
+  5,
+  "",
+  "multifamily",
+  "They were very responsive, prompt, efficient, and polite to the residents in this multi family community. I have used them before and intend to utilize them more often in the future."
+ ],
+ [
+  "R.",
+  5,
+  "",
+  "residential",
+  "The company as a whole goes Above and beyond! Great service. Very detailed. Hardworking! I would have them work on my house in the future."
+ ],
+ [
+  "A. C.",
+  5,
+  "",
+  "residential",
+  "I had extensive damage to the roof of my home after a tornado. I was recommended to Farha by the landlord of the company I work for, who also does business with them. Shane Cox installed a tarp within the next day of contacting Farha. Within a week I had a new roof. His crew installed in one day and clean up very well after. I have never had to make an insurance claim on my house, and Shane was very helpful in ushering me through the various steps and timelines. I would have no hesitations with recommending Farha roofing to others."
+ ],
+ [
+  "G. L.",
+  5,
+  "",
+  "residential",
+  "Shane Cox did a great job managing the crews for my roof replacement, new gutters and flashing and screen repair. He kept me informed of when the trades were coming out and made sure everything was done professionally and the site was cleaned up afterwards."
+ ],
+ [
+  "B. B.",
+  5,
+  "",
+  "unclear",
+  "Farha Roofing is a great company to work with. Nick and his team are professional and knowledgeable when it comes any roofing needs you have on your home or business."
+ ],
+ [
+  "J. W.",
+  5,
+  "",
+  "residential",
+  "Nick Jennewein with Farha roofing provided awesome service after the recent storms. He was able to show up at my house first thing the following morning to do an inspection of my roof and siding. Other companies said it would be days before they could even come out. Even though he was just there for an inspection, he noticed a couple things he could repair on my siding while he was there. I have recommended Farha to all my friends and family. Thanks for the great service and fast response."
+ ],
+ [
+  "J. C.",
+  5,
+  "",
+  "residential",
+  "After suffering significant storm damage to my home in Missouri I interviewed 3 contractors to provide repair and replacement estimates. As a result of those interviews I selected Farah Roofing. there was not a close second. Both Nick Jennewein the General Manager and Shane Cox the Project Manager came to my home, reviewed the needed work, and provided a well outlined proposal and a reasonable estimate. They worked closely with my insurance company and anytime the insurance representatives were on site Shane Cox was here. My background was spent as the Operations Chief for the St. Louis branch of a major organization with 2 large buildings. I have worked countless large projects and some not so large and I can say with complete confidence that Farah Roofing was in all ways superior. Supplies were delivered and staged according to my instructions."
+ ],
+ [
+  "T. N.",
+  5,
+  "",
+  "unclear",
+  "I have been in property management for MANY years. The level of professionalism that Farha Roofing exhibits is exceptional! They have completed many scopes of work at my property and from small repairs to full roof replacements they give the same level of attention. HIGHLY recommend this company for any of your roofing needs!!!!"
+ ],
+ [
+  "J. E.",
+  5,
+  "",
+  "residential",
+  "Farha repaired sections of my roof, and I couldn't be happier. The level of expertise, friendliness, and the product quality. An excellent local company!"
+ ],
+ [
+  "S. A.",
+  5,
+  "",
+  "unclear",
+  "Nick at Farha roofing was incredible. We had everything going against us with insururance and deadlines and Nick pulled it all to the finish line. From Nick, the materials, the crew, and even Betty in the office, everyone I worked with was professional and excellent. I couldn’t recommend them more. Use Farha roofing, they will get it done right!"
+ ]
 ]
