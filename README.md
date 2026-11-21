@@ -16,8 +16,6 @@ It's a Claude skill that's already set up for Farha Roofing:
 
 **[Download `farha-review-posts.zip`](https://github.com/aidaddy-com/farha-review-posts/raw/main/farha-review-posts.zip)**
 
-This repository is private. You need to be signed in to a GitHub account with access to see the link, or ask AI Daddy to send you the zip.
-
 Leave it as a .zip. Don't unzip it.
 
 ### Step 2: Add it to Claude
