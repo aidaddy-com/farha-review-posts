@@ -393,12 +393,17 @@ def tag(d, x, y, text, fnt, bg, fg=(255, 255, 255, 255), padx=18, pady=10):
     return y + asc + 2 * pady
 
 
+MIN_BODY = 24     # smallest body text that stays readable on a phone
+CARD_NOTES = []   # filled by market() when it had to shorten the review on the card
+
+
 def market(bg, logo_white, c, r, title):
     """The brand's own testimonial look: accent strip with logo, title, location tag,
     the best line in a dark box, then the full review."""
     INK = rgb(c["dark"])
     img = Image.new("RGBA", (W, H), (255, 255, 255, 255))
-    strip_w = 250
+    # geometry measured from Farha's own testimonial post (Instagram, Apr 2026), scaled to 1080x1350
+    strip_w = 316
     grad = Image.new("RGBA", (strip_w, H))
     a, b = rgb(c["accent"]), rgb(c["accent_light"])
     gd = ImageDraw.Draw(grad)
@@ -408,13 +413,13 @@ def market(bg, logo_white, c, r, title):
     img.alpha_composite(grad)
     d = ImageDraw.Draw(img)
     if logo_white is not None:
-        paste_h(img, logo_white, 110, (strip_w // 2, H - 90 - 110), "mt", max_w=190)
-    x0, right = 320, W - 70
-    y = 92
+        paste_h(img, logo_white, 100, (strip_w // 2, H - 76 - 100), "mt", max_w=170)
+    x0, right = 373, W - 100
+    y = 100
     full = r["quote"]
     best = r.get("_hook") or r.get("_best") or full
     show_full = words(full) > words(best) + 2
-    tsize = 64 if show_full else 76
+    tsize = 60 if show_full else 70
     tf = serif(tsize, weight=800)
     for line in layout_lines(tokens(title, ""), {False: tf}, right - x0):
         d.text((x0, y), " ".join(w_ for w_, _, _ in line), font=tf, fill=INK)
@@ -423,39 +428,49 @@ def market(bg, logo_white, c, r, title):
     if r.get("_loctag"):
         tf_ = sans(26, "SemiBold")
         ty = y
-        y = tag(d, x0, y, r["_loctag"], tf_, rgb(c["accent_light"]))
+        y = tag(d, x0, y, r["_loctag"], tf_, rgb(c.get("tag", c["accent_light"])))
         if r.get("_jobtag"):
             jx = x0 + tf_.getlength(r["_loctag"]) + 36 + 10
             if jx + tf_.getlength(r["_jobtag"]) + 36 > right:
                 y = tag(d, x0, y + 8, r["_jobtag"], tf_, INK)
             else:
                 tag(d, jx, ty, r["_jobtag"], tf_, INK)
-        y += 44
+        y += 62
     else:
         y += 30
     # dark box with the hook, bleeding over the strip (left out on a carousel's 2nd slide: slide 1 already shows it)
-    bx0, bx1, pad = 200, W - 70, 44
+    bx0, bx1, pad = 100, W - 96, 48
     nobox = r.get("_nobox") and show_full
     if nobox:
         y += 10
     lines, fonts, size = ([], {}, 0) if nobox else fit_text("“" + best + "”", r.get("hl", ""), lambda s_: {False: serif(s_, weight=700), True: serif(s_, weight=800)},
-                                  bx1 - bx0 - 2 * pad, (250 if show_full and words(full) > 70 else 330), 66 if words(best) > 6 else 84, 40, 1.18)
+                                  bx1 - bx0 - 2 * pad, (250 if show_full and words(full) > 70 else 330), 62 if words(best) > 6 else 80, 40, 1.18)
     if not nobox:
         bh = len(lines) * size * 1.18 + 2 * pad - size * 0.18
         d.rectangle((bx0, y, bx1, y + bh), fill=INK)
         draw_lines(d, lines, fonts, bx0 + pad, y + pad - size * 0.08, size, 1.18, {False: (255, 255, 255, 255), True: rgb(c["accent_light"])})
-        y += bh + 44
+        y += bh + 64
     bottom = H - 140
     if show_full:
-        y = tag(d, x0, y, r.get("_subtag", "In their words"), sans(24, "SemiBold"), rgb(c["accent_light"])) + 26
-        body = "“" + full + "”"
+        y = tag(d, x0, y, r.get("_subtag", "In their words"), sans(24, "SemiBold"), rgb(c.get("tag", c["accent_light"]))) + 26
         bx = x0
-        lines, fonts, size = fit_text(body, r.get("hl", "") if nobox else "", lambda s_: {False: sans(s_), True: sans(s_, "SemiBold")}, right - bx, bottom - y - 10, 40 if nobox else 34, 19, 1.42)
-        y = draw_lines(d, lines, fonts, bx, y, size, 1.42, {False: (51, 60, 74, 255), True: rgb(c["accent"])}) + 14
+        mk = lambda s_: {False: sans(s_), True: sans(s_, "SemiBold")}
+        # Phones show the post about 1/3 size, so body text under 24px is unreadable. If the whole review
+        # won't fit at 24px, show the first whole sentences that do, end with "…", and say so in the sheet.
+        sents = re.findall(r"[^.!?]+[.!?]+[\"')\]]*\s*|[^.!?]+$", full) or [full]
+        for k in range(len(sents), 0, -1):
+            part = "".join(sents[:k]).strip()
+            body = "“" + part + ("…" if k < len(sents) else "") + "”"
+            if len(layout_lines(tokens(body, ""), mk(MIN_BODY), right - bx)) * MIN_BODY * 1.42 <= bottom - y - 10:
+                break
+        if k < len(sents):
+            CARD_NOTES.append(f"Card shows the first {k} of {len(sents)} sentences (too long to read at full length); the full review is in captions.md")
+        lines, fonts, size = fit_text(body, r.get("hl", "") if nobox else "", mk, right - bx, bottom - y - 10, 40 if nobox else 30, MIN_BODY, 1.42)
+        y = draw_lines(d, lines, fonts, bx, y, size, 1.42, {False: (51, 60, 74, 255), True: rgb(c.get("accent_text", c["accent"]))}) + 14
     sy = max(y + 6, bottom - 6) if not show_full else bottom
     sw = stars(d, x0, sy, 28, rgb(c["accent"]), 5)
     d.text((x0 + sw + 18, sy - 2), "— " + (r.get("name") or r["_fallback"]), font=sans(28, "SemiBold"), fill=INK)
-    d.text((x0, sy + 46), r["_srcline"], font=sans(21), fill=(96, 106, 120, 255))
+    d.text((x0, sy + 46), r["_srcline"], font=sans(24), fill=(96, 106, 120, 255))
     return img
 
 
@@ -474,7 +489,7 @@ def split(bg, logo_white, c, r, title):
     label = r.get("_loctag") or f"5-Star {r.get('source', 'Google')} Review"
     tf_ = sans(26, "SemiBold")
     ty = y
-    y = tag(d, side, y, label, tf_, rgb(c["accent_light"]), padx=20, pady=12)
+    y = tag(d, side, y, label, tf_, rgb(c.get("tag", c["accent_light"])), padx=20, pady=12)
     if r.get("_jobtag"):
         jx = side + tf_.getlength(label) + 40 + 12
         if jx + tf_.getlength(r["_jobtag"]) + 40 > W - side:  # no room: second line
@@ -488,10 +503,10 @@ def split(bg, logo_white, c, r, title):
     lines, fonts, size = fit_text("“" + r["quote"] + "”", r.get("hl", ""), lambda s_: {False: serif(s_, weight=700), True: serif(s_, weight=800)},
                                   W - 2 * side, bottom - y, 76, 30, 1.18)
     block = len(lines) * size * 1.18
-    draw_lines(d, lines, fonts, side, y + max(0, (bottom - y - block) / 2 - 10), size, 1.18, {False: INK, True: rgb(c["accent"])})
+    draw_lines(d, lines, fonts, side, y + max(0, (bottom - y - block) / 2 - 10), size, 1.18, {False: INK, True: rgb(c.get("accent_text", c["accent"]))})
     d.rectangle((side, H - 140, side + 80, H - 136), fill=rgb(c["accent"]))
     d.text((side, H - 118), r.get("name") or r["_fallback"], font=sans(30, "SemiBold"), fill=INK)
-    d.text((side, H - 76), r["_srcline"], font=sans(22), fill=(96, 106, 120, 255))
+    d.text((side, H - 76), r["_srcline"], font=sans(24), fill=(96, 106, 120, 255))
     return img
 
 
@@ -501,9 +516,14 @@ LAYOUT_FN = {"hero": lambda bg, lw, c, r, t: hero(bg, lw, c, r), "bubble": bubbl
 
 # ---------------------------------------------------------------- batch
 def review_key(r):
+    """Same review = same site + same opening words, however the name was written."""
+    text = re.sub(r"[^a-z0-9]+", " ", r["quote"].lower()).strip()[:120]
+    return hashlib.sha1(f"{r.get('source', 'Google').lower()}|{text}".encode()).hexdigest()[:16]
+
+
+def old_review_key(r):  # format used before Nov 2026; kept so older seen.json files still work
     text = re.sub(r"\s+", " ", r["quote"].strip())[:80]
-    base = f"{r.get('source', '')}|{r.get('name', '')}|{text}"
-    return hashlib.sha1(base.lower().encode()).hexdigest()[:16]
+    return hashlib.sha1(f"{r.get('source', '')}|{r.get('name', '')}|{text}".lower().encode()).hexdigest()[:16]
 
 
 def apply_edits(r):
@@ -548,35 +568,68 @@ def first_sentences(text, limit):
 
 
 # ---------------------------------------------------------------- job type (commercial / residential / multifamily)
-JOB_WORDS = {
-    "commercial": r"\b(building|buildings|office|offices|warehouse|church|school|college|campus|store|retail|restaurant|hotel|"
-                  r"(?:our|my|their) business|business owners?|vendors?|facility|facilities|plant|tenants?|property manager|building manager|commercial|"
-                  r"tpo|epdm|pvc|membrane|flat roof|modified bitumen|coating|medical|clinic|hospital|sq ?ft|square feet|stor(e)?y)\b",
-    "multifamily": r"\b(hoa|homeowners? association|apartments?|apartment complex|condo(minium)?s?|complex|townhomes?|townhouses?|"
-                   r"units|residents|multi-?family|property management)\b",
+JOB_WORDS = {  # also the job-type keys photos and labels use
+    "commercial": r"\b(office buildings?|office (?:roof|space|complex)s?|"
+                  r"(?:our|my|their|the|this|a|one of our|commercial|church|school|large) (?:\w+ )?buildings?(?! process| a | an | the | my | our | in )|"
+                  r"warehouses?|church(?:es)?|schools?|school district|college|campus|stores?|retail|restaurants?|sports bar|hotels?|"
+                  r"(?:our|my|their) business|business owners?|(?:roofing|our|the) vendors?|vendor (?:we|i) use|facility|facilities|"
+                  r"tenants?|property managers?|building managers?|district managers?|commercial|our staff|our company|our employees|"
+                  r"medical|clinic|hospital|\w+[- ]story|" + "(?:MATERIALS)" + r")\b",
+    "multifamily": r"\b(apartments?|condo(?:minium)?s?|townhomes?|townhouses?|multi[- ]?family|\d[- ]?plex|fourplex|duplex|"
+                   r"hoas|hoa's|homeowners? associations)\b",
     "residential": r"\b(my house|our house|my home|our home|house|home|homeowner|shingles?|gutters?|garage|my roof|our roof|"
-                   r"family|neighbor|neighbors|closing|attic|chimney|insurance)\b",
+                   r"family|neighbors?|closing|attic|chimney|insurance)\b",
 }
+# Roof materials hint at commercial work, but homes get them too (a TPO porch or sunroom), so they only
+# count when the review never says it's a house.
+MATERIALS = r"tpo|epdm|pvc|membrane|flat roof(?:ing|s)?|modified bitumen|coating|sq ?ft|square feet"
+JOB_WORDS["commercial"] = JOB_WORDS["commercial"].replace("(?:MATERIALS)", "(?:" + MATERIALS + ")")
+HOME = (r"\b(?:my|our) (?:\w+ ){0,2}(?:house|home|residence)\b|\b(?:home addition|sunroom|back porch|porch addition|"
+        r"(?:my|our) garage)\b")
+# "residential or commercial", "homeowner, business or entity": praise for both, not a clue
+BOTH = (r"\b(?:residential|homeowners?)\W+(?:\w+\W+){0,2}(?:and|or)\W+(?:\w+\W+){0,1}(?:commercial|business(?:,? or entity)?)\b|"
+        r"\bcommercial\W+(?:and|or)\W+residential\b")
+MF_WEAK = r"\b(units|residents|tenants|communities|property management)\b"  # count only when there's no house in the review
+# "office" is a job clue ("our office", "the chamber office") unless it's Farha's own office:
+# "the office", "Betty in the office", "office staff", "the Canon City office", "offices in Denver"
+OFFICE_FARHA = (r"\b(?:the|their|back-|front)\s*offices?\b|\boffices?\s+(?:staff|team|manager|personnel|in)\b|"
+                r"\b(?:city|denver|wichita|durango|phoenix|louis|kansas)\s+office\b")
+NAME_MF = r"\b(apartments?|condos?|hoa|homeowners association|townhomes?)\b"
+NAME_COM = r"\b(storage|church|school|llc|inc|properties|property|management|hotel|restaurant|ministries|realty)\b"
 
 
-def detect_job(text: str) -> tuple[str, str]:
-    """Best guess from the review's own words. Returns (job, the words that decided it)."""
-    t = text.lower()
-    hits = {k: re.findall(rx, t) for k, rx in JOB_WORDS.items()}
-    flat = lambda k: sorted({h if isinstance(h, str) else h[0] for h in hits[k]})
-    score = {k: len(v) for k, v in hits.items()}
-    score["commercial"] *= 1.5   # strong words: one 'TPO' or 'office building' beats a stray 'home'
-    score["multifamily"] *= 1.5
-    strong_mf = re.findall(r"\b(hoa|homeowners? association|apartments?|condo(?:minium)?s?|townhomes?|townhouses?|multi-?family)\b", t)
-    house = re.search(r"\b(my|our) (house|home)\b", t)
-    if strong_mf and house and set(strong_mf) <= {"hoa", "homeowners association", "homeowner association"}:
-        return "residential", f"{house.group(0)} (a house in an HOA)"
-    if strong_mf:  # an HOA or condo job is multifamily even when the review says 'building' or 'TPO'
-        return "multifamily", ", ".join(sorted(set(strong_mf)))
-    best = max(score, key=score.get)
-    if score[best] == 0:
-        return "residential", "no clues; most reviews are homes"
-    return best, ", ".join(flat(best))
+def detect_job(text: str, name: str = "") -> tuple[str, str]:
+    """Best guess from the review's own words (and a business reviewer's name).
+    Returns (job, the words that decided it). Tested on 82 hand-labeled Farha reviews (Nov 2026)."""
+    t = re.sub(BOTH, " ", text.lower())
+    nm = (name or "").lower()
+    home = re.search(HOME, t)
+    # 1. multifamily: apartments, condos, townhomes, an HOA as the client
+    mf = re.findall(JOB_WORDS["multifamily"].replace("|units|residents|property management", ""), t)
+    hoa_client = re.search(r"\bfor (?:our|the|an?) (?:hoa|homeowners? association)\b", t)
+    if hoa_client:
+        mf.append(hoa_client.group(0))
+    if mf and not (home and set(mf) <= {"apartment", "townhouse", "townhome"}):  # a townhouse apartment attached to my house is still a home
+        return "multifamily", ", ".join(sorted(set(mf)))
+    # 2. commercial vs multifamily vs residential by weighted word count
+    com = re.findall(JOB_WORDS["commercial"], t)
+    com += ["office"] * (len(re.findall(r"\boffices?\b", t)) - len(re.findall(OFFICE_FARHA, t)))
+    if home:
+        com = [w for w in com if not re.fullmatch(MATERIALS, w)]
+    res = re.findall(JOB_WORDS["residential"], t)
+    mfw = [] if home else re.findall(MF_WEAK, t)
+    if mfw and len(mfw) * 1.5 >= max(len(res), len(com) * 1.5):
+        return "multifamily", ", ".join(sorted(set(mfw)))
+    if com and len(com) * 1.5 >= len(res):
+        return "commercial", ", ".join(sorted(set(com)))
+    if home or res:
+        return "residential", (home.group(0) if home else ", ".join(sorted(set(res))))
+    # 3. no clues in the text: a business name can still tell ("Ethans Apartments", "Delano Storage")
+    if re.search(NAME_MF, nm):
+        return "multifamily", f"reviewer name: {name}"
+    if re.search(NAME_COM, nm):
+        return "commercial", f"reviewer name: {name}"
+    return "residential", "no clues; most reviews are homes"
 
 
 def photos_for(pdir: Path, job: str, L, fallbacks: dict):
@@ -695,7 +748,10 @@ def main():
     only = locs.get((a.location or "").lower()) if a.location else None
     if a.location and not only:
         sys.exit(f"Unknown location '{a.location}'. Known: " + ", ".join(L.get("slug", "") for L in cfg.get("locations", [])))
-    out = folder / "posts" / (dt.date.today().isoformat() + (f"-{only['slug']}" if only else ""))
+    base = folder / "posts" / (dt.date.today().isoformat() + (f"-{only['slug']}" if only else ""))
+    out, k = base, 2
+    while (out / "approval.csv").exists():  # a second run the same day gets its own folder, never overwrites
+        out, k = base.with_name(f"{base.name}-{k}"), k + 1
     out.mkdir(parents=True, exist_ok=True)
     rows, md, skipped, n = [], [f"# {brand} review posts, {dt.date.today():%d %b %Y}\n"], [], 0
 
@@ -703,7 +759,7 @@ def main():
         if only and locs.get(str(raw.get("location", "")).lower()) is not only:
             continue  # another office's review: not part of this run
         key = review_key(raw)
-        if key in seen and not a.include_seen:
+        if (key in seen or old_review_key(raw) in seen) and not a.include_seen:
             skipped.append(raw.get("name") or "a review")
             continue
         for fld in ("excerpt", "hl", "hook"):
@@ -714,6 +770,7 @@ def main():
             sys.exit(f"{raw.get('name')}: the hook has {words(raw['hook'])} words; keep it to {hook_max} or fewer.")
         r = apply_edits(raw)
         edit_note = "; ".join(f"'{e['from']}' -> '{e['to']}'" for e in raw.get("edits") or [])
+        CARD_NOTES.clear()
         r["_fallback"] = f"{brand} customer" if brand else "Happy customer"
         L = locs.get(str(r.get("location", "")).lower())
         if r.get("location") and locs and not L:
@@ -730,7 +787,7 @@ def main():
             elif r.get("job"):
                 job, job_why = r["job"], "set by hand"
             else:
-                job, job_why = detect_job(r["quote"])
+                job, job_why = detect_job(r["quote"], r.get("name", ""))
                 job_why = "auto: " + job_why
             if job not in JOB_WORDS:
                 sys.exit(f"{raw.get('name')}: job must be commercial, residential or multifamily, not '{job}'.")
@@ -757,7 +814,7 @@ def main():
         slug = re.sub(r"[^a-z0-9]+", "-", (r.get("name") or f"review-{n}").lower()).strip("-")
         is_long = words(r["quote"]) > long_words
         shown = r.get("excerpt") or r["quote"]
-        slides = []
+        slides, used_layouts = [], []
         if carousel == "always" or (carousel == "long-only" and is_long):
             teaser = r["_hook"]
             r1 = {**r, "quote": teaser, "hl": r.get("hl", "") if r.get("hl", "") in teaser else ""}
@@ -766,6 +823,7 @@ def main():
             else:
                 slides.append(LAYOUT_FN[car_slides[0]](bg, logo_white, c, r1, cfg.get("bubble_title", "Client Review")))
             slides.append(LAYOUT_FN[car_slides[1]](bg, logo_white, c, {**r, "_nobox": True}, cfg.get("bubble_title", "Client Review")))
+            used_layouts += list(car_slides[:2])
         else:
             if template != "auto":
                 pick = template
@@ -780,6 +838,7 @@ def main():
             else:  # big-quote layouts show only the hook
                 rr = {**r, "quote": r["_hook"], "hl": r.get("hl", "") if r.get("hl", "") in r["_hook"] else ""}
             slides.append(LAYOUT_FN[pick](bg, logo_white, c, rr, cfg.get("bubble_title", "Client Review")))
+            used_layouts.append(pick)
         files = []
         for i, im in enumerate(slides, 1):
             name = f"{n:02d}-{slug}{'-' + str(i) if len(slides) > 1 else ''}.png"
@@ -789,10 +848,10 @@ def main():
         kind = "Carousel" if len(files) > 1 else "Single image"
         cap = r.get("caption", "").strip()
         md.append(f"## {n:02d}. {r.get('name') or 'Customer'} ({(L['name'] + ', ') if L else ''}{(job + ', ') if job else ''}{r.get('source', 'Google')}{', ' + r['date'] if r.get('date') else ''})\n"
-                  f"{kind}: {', '.join(files)}\n\n" + (f"**Edited:** {edit_note} (the review site hid these names)\n\n" if edit_note else "") + f"**Caption**\n\n{cap or '(no caption yet)'}\n\n**Full review**\n\n> {r['_orig']}\n")
-        rows.append({"post": n, "files": " ".join(files), "type": kind, "location": L.get("name", "") if L else "", "job type": f"{job} ({job_why})" if job else "", "background": src_photo, "source": r.get("source", "Google"),
+                  f"{kind}: {', '.join(files)}\n\n" + (f"**Edited:** {edit_note} (the review site hid these names)\n\n" if edit_note else "") + "".join(f"**Note:** {x}\n\n" for x in dict.fromkeys(CARD_NOTES)) + f"**Caption**\n\n{cap or '(no caption yet)'}\n\n**Full review**\n\n> {r['_orig']}\n")
+        rows.append({"post": n, "files": " ".join(files), "type": kind, "location": L.get("name", "") if L else "", "job type": f"{job} ({job_why})" if job else "", "background": src_photo if any(x != "market" for x in used_layouts) else "none (text-only card)", "source": r.get("source", "Google"),
                      "reviewer": r.get("name", ""), "date": r.get("date", ""), "review": r["_orig"], "caption": cap,
-                     "edits (blurred names replaced)": edit_note, "approve (Y/N)": "", "posted (date)": ""})
+                     "edits (blurred names replaced)": edit_note, "card note": "; ".join(dict.fromkeys(CARD_NOTES)), "approve (Y/N)": "", "posted (date)": ""})
         seen[key] = {"name": r.get("name", ""), "source": r.get("source", ""), "made": dt.date.today().isoformat()}
 
     rot_file.write_text(json.dumps(rot))
@@ -803,10 +862,14 @@ def main():
             w = csv.DictWriter(f, fieldnames=list(rows[0]))
             w.writeheader()
             w.writerows(rows)
-    print(f"\nDONE: {len(rows)} post(s) in {out}")
+    if not rows and not any(out.iterdir()):
+        out.rmdir()  # nothing new: don't leave an empty folder behind
+        print("\nDONE: no new posts (nothing to make).")
+    else:
+        print(f"\nDONE: {len(rows)} post(s) in {out}")
     if skipped:
         print(f"Skipped {len(skipped)} already made before: {', '.join(skipped)}")
-    if rows and not any(x["background"] for x in rows) and template != "solid":
+    if rows and not any(x["background"] and not x["background"].startswith("none") for x in rows) and template != "solid":
         print("NOTE: no photos found, so a plain brand background was used. Add photos to the photos folder, or use --template solid.")
     if logo_white is None:
         print("NOTE: no logo found. Add the logo file and set its name in settings.json.")
@@ -835,7 +898,7 @@ def preview(folder, cfg, c, brand, logo_white, photos, focus, reviews_file):
     def bg_for(i, rv=None):
         if cfg.get("job_types") and rv is not None:
             L = _loc_of(cfg, rv)
-            job = rv.get("job") or detect_job(rv["quote"])[0]
+            job = rv.get("job") or detect_job(rv["quote"], rv.get("name", ""))[0]
             loc, pool = photos_for(folder / cfg.get("photos_folder", "photos"), job, L, {k: v.get("fallback", []) for k, v in cfg["job_types"].items()})
             cands = loc + pool
             if cands:
@@ -856,13 +919,13 @@ def preview(folder, cfg, c, brand, logo_white, photos, focus, reviews_file):
         if lay not in ("bubble", "market"):
             r["quote"], r["hl"] = r["_hook"], (r.get("hl", "") if r.get("hl", "") in r["_hook"] else "")
         if cfg.get("job_types"):
-            r["_jobtag"] = cfg["job_types"].get(rv.get("job") or detect_job(rv["quote"])[0], {}).get("label", "")
+            r["_jobtag"] = cfg["job_types"].get(rv.get("job") or detect_job(rv["quote"], rv.get("name", ""))[0], {}).get("label", "")
         LAYOUT_FN[lay](bg_for(i, rv), logo_white, c, r, title).convert("RGB").save(out / f"{name}.png", optimize=True)
         print(out / f"{name}.png")
     r = _decorate({**apply_edits(long_r), **fb}, _loc_of(cfg, long_r) or L0, cfg)
     teaser = r["_hook"]
     if cfg.get("job_types"):
-        r["_jobtag"] = cfg["job_types"].get(long_r.get("job") or detect_job(long_r["quote"])[0], {}).get("label", "")
+        r["_jobtag"] = cfg["job_types"].get(long_r.get("job") or detect_job(long_r["quote"], long_r.get("name", ""))[0], {}).get("label", "")
     hero(bg_for(2, long_r), logo_white, c, {**r, "quote": teaser, "hl": r["hl"] if r.get("hl", "") in teaser else ""}).convert("RGB").save(out / "4-carousel-slide-1.png", optimize=True)
     bubble(bg_for(2, long_r), logo_white, c, r, title).convert("RGB").save(out / "4-carousel-slide-2.png", optimize=True)
     print(out / "4-carousel-slide-1.png", out / "4-carousel-slide-2.png", sep="\n")

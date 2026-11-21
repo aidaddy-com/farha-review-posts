@@ -81,4 +81,14 @@ The tag and the background photo follow the job type. If a guess is wrong, just 
 
 ---
 
+## How it was checked (Nov 2026)
+
+- **Matches Farha's own template.** Its testimonial card was overlaid on Farha's real Instagram post: box, text column and margins line up within 2%.
+- **Readable on a phone.** No text is cut off in Instagram's 3:4 profile grid, and body text stays at least 24 px (about 9 pt on a phone). Text colors pass WCAG contrast for large text.
+- **Job type detection.** Tested on 140 hand-labeled Farha Google reviews from all 8 offices: every review with a clear type came out right, and no home was tagged commercial. Re-run it any time with `python3 tests/job-type/run.py`.
+- **Hooks.** `scripts/check_hooks.py` scores every hook before rendering; weak ones get rewritten.
+- **Cold test.** A fresh Claude ran the zip on its own ("make review posts for Eads", then "all offices"), and everything it tripped over was fixed.
+
+---
+
 <sub>Fonts: Montserrat, plus fallback Playfair Display, Poppins and Raleway (SIL Open Font License, license files included). Logo, job photos and brand belong to Farha Roofing.</sub>

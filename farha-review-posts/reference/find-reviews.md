@@ -7,15 +7,15 @@ General rules:
 - Read only. Never click Reply, Like, Share, Report, or "Write a review".
 - Prefer `get_page_text`, `find` and `read_page` over screenshots. Use `javascript_tool` only to read the page, never to change it. Clicking "More", the Reviews tab and the Sort menu is fine; those only change what's shown.
 - Collect the newest 10 to 20 reviews per office, then stop.
-- Each office has its own Google listing. Never mix reviews between offices: the office comes from the link you opened.
+- Each office has its own Google listing. The office comes from the link you opened, unless the review itself names a different Farha office (see SKILL.md step 2).
 
 ## Google Maps (every office)
 
 1. Open the office's Google link from `settings.json`. If a consent banner shows, choose **Reject all**.
 2. Click the **Reviews** tab (`find` "Reviews").
 3. Sort by newest: click the **Sort** button, then the **Newest** menu item.
-4. **Scroll the review list**, not the map. The list is the tallest scrolling panel on the left. Cards load as you scroll.
-5. Expand long reviews: click every **More** button in the list.
+4. **Scroll the review list**, not the map. The list is the tallest scrolling panel on the left. Cards load as you scroll. Setting `scrollTop` from JavaScript sometimes loads nothing; if the card count doesn't grow, use real mouse-wheel scrolls (`computer` → `scroll`) with the pointer over the list.
+5. Expand long reviews: click every **More** / **See more** button in the list (`button.w8nwRe` in Nov 2026).
 6. Read the cards. This `javascript_tool` snippet worked in Nov 2026 (Google changes its page often; if it returns nothing, fall back to `get_page_text`):
 
 ```js
@@ -27,7 +27,11 @@ General rules:
 })).filter(x => x.text && x.stars === '5 stars')
 ```
 
-   Tool output can be cut off around 1,000 characters. Save the list in `window.__r` first, then read a few reviews at a time.
+   Tool output can be cut off around 1,000 characters. Two ways around it:
+   - Save the list in `window.__r` first, then read a few reviews at a time.
+   - Or write the list into the page as plain text and read it in one go with `get_page_text`:
+     `document.body.innerHTML = '<article><pre>' + list.map(x => x.name + ' | ' + x.stars + ' | ' + x.when + '\n' + x.text).join('\n') + '</pre></article>'`.
+     This only changes your own copy of the page; reload it to get the map back.
 7. Ignore "Response from the owner". It is not part of the review. A review with no text of its own is skipped.
 
 Notes:
